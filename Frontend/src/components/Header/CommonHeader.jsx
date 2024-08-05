@@ -36,9 +36,7 @@ const CommonHeader = ({ collapsed }) => {
     },
   ];
   return (
-    <Header
-      className={collapsed ? "col-header-container" : "nonCol-header-container"}
-    >
+    <Header className="header-container">
       <Button
         type="text"
         icon={

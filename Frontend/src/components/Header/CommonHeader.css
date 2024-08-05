@@ -1,12 +1,5 @@
-.col-header-container {
+.header-container {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  width: 160vh;
-}
-.nonCol-header-container {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  width: 145vh;
 }

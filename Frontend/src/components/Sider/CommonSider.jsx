@@ -13,11 +13,20 @@ const CommonSider = ({ collapsed }) => {
   const navigate = useNavigate();
 
   const item = Menuconfig.map((icon) => {
-    return {
+    const child = {
       key: `${icon.path}`,
       icon: iconToElement(icon.icon),
       label: `${icon.label}`,
     };
+    if (icon.children) {
+      child.children = icon.children.map((item) => {
+        return {
+          key: item.path,
+          label: item.label,
+        };
+      });
+    }
+    return child;
   });
   return (
     <Sider trigger={null} collapsible collapsed={collapsed}>
