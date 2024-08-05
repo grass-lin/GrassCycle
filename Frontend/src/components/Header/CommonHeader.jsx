@@ -1,17 +1,14 @@
 import React from "react";
 import { useDispatch } from "react-redux";
 import { MenuFoldOutlined, MenuUnfoldOutlined } from "@ant-design/icons";
-import { Layout, Button, Dropdown, Avatar, theme } from "antd";
+import { Layout, Button, Dropdown, Avatar } from "antd";
 import { collapseMenu } from "../../store/reducers/Menu";
 import "./CommonHeader.css";
+import user from "../../assets/user.png";
 
 const { Header } = Layout;
 
 const CommonHeader = ({ collapsed }) => {
-  const {
-    token: { colorBgContainer, borderRadiusLG },
-  } = theme.useToken();
-
   const dispatch = useDispatch();
   const setCollapsed = () => {
     dispatch(collapseMenu());
@@ -40,8 +37,7 @@ const CommonHeader = ({ collapsed }) => {
   ];
   return (
     <Header
-      className="header-container"
-      style={{ padding: 0, background: "#213547" }}
+      className={collapsed ? "col-header-container" : "nonCol-header-container"}
     >
       <Button
         type="text"
@@ -54,14 +50,14 @@ const CommonHeader = ({ collapsed }) => {
         }
         onClick={() => setCollapsed(!collapsed)}
         style={{
-          width: 64,
-          height: 64,
+          width: 48,
+          height: 32,
           backgroundColor: "#ffffff",
         }}
       />
       <Dropdown menu={{ items }}>
         <a onClick={(e) => e.preventDefault()}>
-          <Avatar size={36} src="../../assets/user.png" />
+          <Avatar size={36} src={user} />
         </a>
       </Dropdown>
     </Header>
