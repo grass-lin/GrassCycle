@@ -1,16 +1,16 @@
 import axios from "./axios";
 
-export function getPostData(params) {
+export function getPosts(params) {
   return axios.request({
-    url: "api/get-post",
+    url: "hall/cycle",
     method: "get",
     params,
   });
 }
 
-export const getHomeData = () => {
+export const getHallData = () => {
   return axios.request({
-    url: "",
+    url: "hall",
     method: "get",
   });
 };

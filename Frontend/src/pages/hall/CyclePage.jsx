@@ -1,22 +1,9 @@
 import { useParams, useNavigate } from "react-router-dom";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { LikeOutlined, LikeFilled, MessageOutlined } from "@ant-design/icons";
 import { Avatar, List, Button, Space, Card } from "antd";
+import { getPosts } from "../../utils/index";
 import "./HallPage.css";
-const postData = Array.from({
-  length: 23,
-}).map((_, i) => ({
-  key: i,
-  href: "https://ant.design",
-  title: `ant design part ${i}`,
-  avatar: `https://api.dicebear.com/7.x/miniavs/svg?seed=${i}`,
-  description:
-    "Ant Design, a design language for background applications, is refined by Ant UED Team.",
-  content:
-    "We supply a series of design principles, practical patterns and high quality design resources (Sketch and Axure), to help people create their product prototypes beautifully and efficiently.",
-  isLiked: false,
-  comments: i,
-}));
 
 const IconText = ({ icon, text }) => (
   <Space>
@@ -27,8 +14,17 @@ const IconText = ({ icon, text }) => (
 
 const App = () => {
   const { cycleID } = useParams();
-  const [data, setData] = useState(postData);
+  const [data, setData] = useState([]);
   const navigate = useNavigate();
+
+  const getPostsData = () => {
+    getPosts({ cycleID: cycleID }).then((response) => {
+      setData(response.data);
+    });
+  };
+  useEffect(() => {
+    getPostsData();
+  }, []);
 
   const handleClickPost = (item) => {
     console.log(item);
@@ -49,9 +45,6 @@ const App = () => {
       itemLayout="vertical"
       size="large"
       pagination={{
-        onChange: (page) => {
-          console.log(page);
-        },
         pageSize: 4,
       }}
       dataSource={data}

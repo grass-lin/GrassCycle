@@ -1,27 +1,31 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import { Table, Tag, Space } from "antd";
+import { getHallData } from "../../utils/index";
 import { useNavigate } from "react-router-dom";
-import { Space, Table, Tag } from "antd";
 
 const App = () => {
+  const [data, setData] = useState([]);
   const navigate = useNavigate();
-  const handleJoin = (data) => {
-    navigate(`cycle/${data}`);
+
+  const handleJoin = (to) => {
+    navigate(`cycle/${to}`);
   };
-  const columns = [
+
+  const config = [
     {
-      title: "Name",
+      title: "兴趣圈",
       dataIndex: "name",
       key: "name",
     },
     {
-      title: "Age",
-      dataIndex: "age",
-      key: "age",
+      title: "人数",
+      dataIndex: "size",
+      key: "size",
     },
     {
-      title: "Address",
-      dataIndex: "address",
-      key: "address",
+      title: "描述",
+      dataIndex: "description",
+      key: "description",
     },
     {
       title: "Tags",
@@ -30,7 +34,7 @@ const App = () => {
       render: (_, { tags }) => (
         <>
           {tags.map((tag) => {
-            let color = tag.length > 5 ? "geekblue" : "green";
+            let color = tag.length > 3 ? "geekblue" : "green";
             if (tag === "loser") {
               color = "volcano";
             }
@@ -53,36 +57,32 @@ const App = () => {
               handleJoin(record.key);
             }}
           >
-            Invite {record.name}
+            进圈
           </a>
-          <a>Delete</a>
         </Space>
       ),
     },
   ];
-  const data = [
-    {
-      key: "1",
-      name: "cycle1",
-      age: 32,
-      address: "New York No. 1 Lake Park",
-      tags: ["nice", "developer"],
-    },
-    {
-      key: "2",
-      name: "cycle2",
-      age: 42,
-      address: "London No. 1 Lake Park",
-      tags: ["loser"],
-    },
-    {
-      key: "3",
-      name: "Joe Black",
-      age: 32,
-      address: "Sydney No. 1 Lake Park",
-      tags: ["cool", "teacher"],
-    },
-  ];
-  return <Table columns={columns} dataSource={data} />;
+
+  const getCycleData = () => {
+    getHallData().then((response) => {
+      console.log(response.data);
+      setData(response.data);
+    });
+  };
+  useEffect(() => {
+    getCycleData();
+  }, []);
+
+  return (
+    <Table
+      columns={config}
+      dataSource={data}
+      size="large"
+      pagination={{
+        pageSize: 8,
+      }}
+    />
+  );
 };
 export default App;

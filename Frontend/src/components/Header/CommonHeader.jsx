@@ -2,22 +2,43 @@ import React from "react";
 import { useDispatch } from "react-redux";
 import { MenuFoldOutlined, MenuUnfoldOutlined } from "@ant-design/icons";
 import { Layout, Button, Dropdown, Avatar } from "antd";
-import { collapseMenu } from "../../store/reducers/Menu";
+import { collapseMenu, switchSelected } from "../../store/reducers/Menu";
 import "./CommonHeader.css";
 import user from "../../assets/user.png";
+import { useNavigate } from "react-router-dom";
 
 const { Header } = Layout;
 
 const CommonHeader = ({ collapsed }) => {
   const dispatch = useDispatch();
+  const setSelectedKey = (target) => {
+    dispatch(switchSelected(target));
+  };
+
   const setCollapsed = () => {
     dispatch(collapseMenu());
   };
+
+  const navigate = useNavigate();
+  const logout = () => {
+    localStorage.removeItem("token");
+    navigate("/login");
+  };
+
+  const toMycenter = () => {
+    navigate("/home/mycenter");
+    setSelectedKey("/home/mycenter");
+  };
+
   const items = [
     {
       key: "1",
       label: (
-        <a target="_blank" rel="noopener noreferrer">
+        <a
+          onClick={() => toMycenter()}
+          target="_blank"
+          rel="noopener noreferrer"
+        >
           个人中心
         </a>
       ),
@@ -25,11 +46,7 @@ const CommonHeader = ({ collapsed }) => {
     {
       key: "2",
       label: (
-        <a
-          onClick={() => logout(!collapsed)}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
+        <a onClick={() => logout()} target="_blank" rel="noopener noreferrer">
           退出
         </a>
       ),
@@ -46,7 +63,7 @@ const CommonHeader = ({ collapsed }) => {
             <MenuFoldOutlined style={{ fontSize: "24px" }} />
           )
         }
-        onClick={() => setCollapsed(!collapsed)}
+        onClick={() => setCollapsed()}
         style={{
           width: 48,
           height: 32,

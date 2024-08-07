@@ -1,28 +1,35 @@
 import React from "react";
+import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import Menuconfig from "../../config/index";
+import Menuconfig from "../../config/Menu";
 import * as Icon from "@ant-design/icons";
 import { Layout, Menu } from "antd";
+import { switchSelected } from "../../store/reducers/Menu";
 import "./CommonSider.css";
 
 const { Sider } = Layout;
 
-const CommonSider = ({ collapsed }) => {
+const CommonSider = ({ collapsed, selected }) => {
   const iconToElement = (name) => React.createElement(Icon[name]);
 
   const navigate = useNavigate();
 
+  const dispatch = useDispatch();
+  const setSelectedKey = (target) => {
+    dispatch(switchSelected(target));
+  };
+
   const item = Menuconfig.map((icon) => {
     const child = {
-      key: `${icon.path}`,
       icon: iconToElement(icon.icon),
       label: `${icon.label}`,
+      key: `${icon.key}`,
     };
     if (icon.children) {
       child.children = icon.children.map((item) => {
         return {
-          key: item.path,
           label: item.label,
+          key: item.key,
         };
       });
     }
@@ -35,10 +42,11 @@ const CommonSider = ({ collapsed }) => {
       <Menu
         theme="dark"
         mode="inline"
-        defaultSelectedKeys={["home"]}
         items={item}
+        selectedKeys={[selected]}
         onClick={(e) => {
           navigate(e.key);
+          setSelectedKey(e.key);
         }}
       />
     </Sider>
