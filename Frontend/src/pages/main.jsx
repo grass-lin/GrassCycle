@@ -9,16 +9,6 @@ import { Outlet } from "react-router-dom";
 const { Content } = Layout;
 
 const MainPage = () => {
-  //useEffect(() => {
-  //  getPostData({ postID: "3" })
-  //    .then((data) => {
-  //      console.log(data);
-  //    })
-  //    .catch((error) => {
-  //      console.log(error);
-  //    });
-  //}, []);
-
   const collapsed = useSelector((state) => state.menu.isCollapse);
   const selected = useSelector((state) => state.menu.selected);
   return (

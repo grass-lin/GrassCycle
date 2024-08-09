@@ -1,7 +1,16 @@
-import { Body, Controller, Get, Inject, Post, ALL } from '@midwayjs/core';
+import {
+  Body,
+  Controller,
+  Get,
+  Inject,
+  Post,
+  ALL,
+  Query,
+} from '@midwayjs/core';
 import { HallService } from '../service/HallService';
 import { AuthService } from '../service/AuthService';
 import { Context } from '@midwayjs/koa';
+import { UserService } from '../service/UserService';
 
 @Controller('/')
 export class HomeController {
@@ -12,10 +21,13 @@ export class HomeController {
   hallService: HallService;
   @Inject()
   authService: AuthService;
+  @Inject()
+  userService: UserService;
 
-  @Get('')
-  async home(): Promise<string> {
-    return 'Hello Midwayjs!';
+  @Get('/user')
+  async home(@Query('userID') userID): Promise<any> {
+    const val = await this.userService.getUserData(userID);
+    return val;
   }
   @Get('/hall')
   async hall(): Promise<Object> {
@@ -26,7 +38,6 @@ export class HomeController {
   @Post('/login')
   async login(@Body(ALL) body: any): Promise<Object> {
     const { username, password } = body;
-    console.log(body);
     const res = await this.authService.checkLoginInfo(username, password);
     return res;
   }

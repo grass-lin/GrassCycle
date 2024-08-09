@@ -1,16 +1,32 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { MenuFoldOutlined, MenuUnfoldOutlined } from "@ant-design/icons";
 import { Layout, Button, Dropdown, Avatar } from "antd";
 import { collapseMenu, switchSelected } from "../../store/reducers/Menu";
 import "./CommonHeader.css";
-import user from "../../assets/user.png";
 import { useNavigate } from "react-router-dom";
+import { getUserData } from "../../utils/index";
+import { baseURL } from "../../utils/axios";
 
 const { Header } = Layout;
 
 const CommonHeader = ({ collapsed }) => {
+  const [userData, setUserData] = useState({});
+  const token = localStorage.getItem("token");
+  const getData = () => {
+    getUserData({ userID: token }).then(({ data }) => {
+      setUserData(data);
+    });
+  };
+
+  useEffect(() => {
+    getData();
+  }, []);
+
   const dispatch = useDispatch();
+
+  const navigate = useNavigate();
+
   const setSelectedKey = (target) => {
     dispatch(switchSelected(target));
   };
@@ -19,7 +35,6 @@ const CommonHeader = ({ collapsed }) => {
     dispatch(collapseMenu());
   };
 
-  const navigate = useNavigate();
   const logout = () => {
     localStorage.removeItem("token");
     navigate("/login");
@@ -52,6 +67,11 @@ const CommonHeader = ({ collapsed }) => {
       ),
     },
   ];
+
+  if (!userData || !userData.profile) {
+    return <div>Loading...</div>;
+  }
+
   return (
     <Header className="header-container">
       <Button
@@ -72,12 +92,14 @@ const CommonHeader = ({ collapsed }) => {
       />
       <Dropdown menu={{ items }}>
         <a onClick={(e) => e.preventDefault()}>
-          <Avatar size={36} src={user} />
+          <Avatar
+            size={36}
+            src={`${baseURL}/images?imageName=${userData.profile.avator}`}
+          />
         </a>
       </Dropdown>
     </Header>
   );
 };
 export default CommonHeader;
-/*
- */
+/* */

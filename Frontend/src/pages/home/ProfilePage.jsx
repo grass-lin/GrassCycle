@@ -1,50 +1,96 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { Form, Input, Button, Upload, message } from "antd";
 import { PlusOutlined } from "@ant-design/icons";
-import { Checkbox, Form, Input, Upload } from "antd";
-import SubButton from "./units/SubButton";
-import { baseURL } from "../../utils/axios";
-const { TextArea } = Input;
-const normFile = (e) => {
-  if (Array.isArray(e)) {
-    return e;
+import { getUserData } from "../../utils/index";
+import { updateUserData } from "../../utils/index";
+import "./HomePage.css";
+
+const MyEditableForm = () => {
+  const [form] = Form.useForm();
+  const [isEditable, setIsEditable] = useState(false);
+  const [fileList, setFileList] = useState([]);
+  const [profile, setProfile] = useState({});
+  const usertoken = localStorage.getItem("token");
+  const getData = () => {
+    getUserData({ userID: usertoken }).then((res) => {
+      setProfile(res.data);
+    });
+  };
+
+  useEffect(() => {
+    getData();
+  }, []);
+
+  const handleEditClick = () => {
+    setIsEditable(!isEditable);
+    if (isEditable === true) {
+      form.resetFields();
+    }
+  };
+
+  const handleFinish = (values) => {
+    const formData = new FormData();
+    Object.keys(values).forEach((key) => {
+      formData.append(key, values[key]);
+    });
+    fileList.forEach((file) => {
+      formData.append("images", file.originFileObj);
+    });
+
+    // 提交数据
+    updateUserData(formData, { userID: usertoken })
+      .then((data) => {
+        message.success("提交成功！");
+        setIsEditable(false);
+        getData();
+      })
+      .catch((error) => {
+        message.error("提交失败！");
+      });
+  };
+
+  const handleUploadChange = ({ fileList: newFileList }) => {
+    setFileList(newFileList);
+  };
+  if (!profile.id) {
+    return <div>Loading...</div>;
   }
-  return e?.fileList;
-};
-const ProfilePage = () => {
-  const [componentDisabled, setComponentDisabled] = useState(true);
   return (
-    <>
-      <Checkbox
-        checked={!componentDisabled}
-        onChange={(e) => setComponentDisabled(!e.target.checked)}
-      >
-        启用编辑
-      </Checkbox>
+    <div>
       <Form
-        labelCol={{
-          span: 4,
-        }}
-        wrapperCol={{
-          span: 14,
-        }}
+        form={form}
+        labelCol={{ span: 4 }}
+        wrapperCol={{ span: 14 }}
         layout="horizontal"
-        disabled={componentDisabled}
-        style={{
-          maxWidth: 600,
+        onFinish={handleFinish}
+        initialValues={{
+          name: `${profile.profile.name}`,
+          intro: `${profile.profile.intro}`,
         }}
+        style={{ maxWidth: 600 }}
       >
-        <Form.Item label="昵称">
-          <Input />
+        <Form.Item label="昵称" name="name">
+          <Input disabled={!isEditable} />
         </Form.Item>
-        <Form.Item label="个人简介">
-          <TextArea rows={4} />
+
+        <Form.Item label="个人简介" name="intro">
+          <Input.TextArea
+            disabled={!isEditable}
+            showCount
+            maxLength={50}
+            style={{ height: 100, resize: "none" }}
+          />
         </Form.Item>
-        <Form.Item
-          label="上传头像"
-          valuePropName="fileList"
-          getValueFromEvent={normFile}
-        >
-          <Upload action={`${baseURL}/api/upload`} listType="picture-card">
+
+        <Form.Item label="更新头像">
+          <Upload
+            listType="picture-card"
+            fileList={fileList}
+            onChange={handleUploadChange}
+            beforeUpload={() => false} // 阻止自动上传，手动上传
+            disabled={!isEditable}
+            maxCount={1}
+          >
             <button
               style={{
                 border: 0,
@@ -58,14 +104,33 @@ const ProfilePage = () => {
                   marginTop: 8,
                 }}
               >
-                选择图片
+                上传
               </div>
             </button>
           </Upload>
         </Form.Item>
+
+        <div className="edit-submit">
+          {!isEditable ? (
+            <Button type="default" onClick={handleEditClick}>
+              启用编辑
+            </Button>
+          ) : (
+            <Button type="default" onClick={handleEditClick}>
+              取消编辑
+            </Button>
+          )}
+          {isEditable && (
+            <Form.Item>
+              <Button type="primary" htmlType="submit">
+                提交
+              </Button>
+            </Form.Item>
+          )}
+        </div>
       </Form>
-      <SubButton isAllowEdit={!componentDisabled} />
-    </>
+    </div>
   );
 };
-export default ProfilePage;
+
+export default MyEditableForm;

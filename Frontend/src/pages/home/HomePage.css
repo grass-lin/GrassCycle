@@ -1,0 +1,22 @@
+.edit-submit {
+  display: flex;
+  flex-direction: row;
+  gap: 50px;
+}
+
+.profile-name {
+  font-weight: bold;
+  font-size: large;
+}
+
+.countpane-card {
+  display: flex;
+  flex-direction: row;
+  gap: 30px;
+}
+
+.icon-text {
+  display: flex;
+  flex-direction: row;
+  gap: 5px;
+}

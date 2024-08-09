@@ -15,11 +15,36 @@ export const getHallData = () => {
   });
 };
 
+export const getUserData = (params) => {
+  return axios.request({
+    url: "user",
+    method: "get",
+    params,
+  });
+};
+
+export const updateUserData = (val, params) => {
+  return axios.request({
+    url: "api/update",
+    method: "post",
+    params,
+    data: val,
+  });
+};
+
 export const handleLoginInfo = (val) => {
-  console.log(val);
   return axios.request({
     url: "login",
     method: "post",
     data: val,
+  });
+};
+
+export const postUserJoin = (val, params) => {
+  return axios.request({
+    url: "hall/join",
+    method: "post",
+    data: val,
+    params,
   });
 };
