@@ -1,15 +1,8 @@
 import React, { useState } from "react";
 import { PlusOutlined } from "@ant-design/icons";
-import {
-  Checkbox,
-  DatePicker,
-  Form,
-  Input,
-  InputNumber,
-  Radio,
-  Upload,
-} from "antd";
+import { Checkbox, Form, Input, Upload } from "antd";
 import SubButton from "./units/SubButton";
+import { baseURL } from "../../utils/axios";
 const { TextArea } = Input;
 const normFile = (e) => {
   if (Array.isArray(e)) {
@@ -43,16 +36,6 @@ const ProfilePage = () => {
         <Form.Item label="昵称">
           <Input />
         </Form.Item>
-        <Form.Item label="性别">
-          <Radio.Group>
-            <Radio value="男"> 男 </Radio>
-            <Radio value="女"> 女 </Radio>
-            <Radio value="非两者之一"> 非两者之一 </Radio>
-          </Radio.Group>
-        </Form.Item>
-        <Form.Item label="年龄">
-          <InputNumber />
-        </Form.Item>
         <Form.Item label="个人简介">
           <TextArea rows={4} />
         </Form.Item>
@@ -61,7 +44,7 @@ const ProfilePage = () => {
           valuePropName="fileList"
           getValueFromEvent={normFile}
         >
-          <Upload action="/upload.do" listType="picture-card">
+          <Upload action={`${baseURL}/api/upload`} listType="picture-card">
             <button
               style={{
                 border: 0,

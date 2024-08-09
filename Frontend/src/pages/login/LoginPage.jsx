@@ -4,15 +4,8 @@ import "./LoginPage.css";
 import { useNavigate, Navigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { switchSelected } from "../../store/reducers/Menu";
+import { handleLoginInfo } from "../../utils/index";
 
-const checkLoginInfo = async (val) => {
-  return {
-    data: {
-      token: "hello",
-      status: 1,
-    },
-  };
-};
 const LoginPage = () => {
   const dispatch = useDispatch();
 
@@ -33,16 +26,16 @@ const LoginPage = () => {
       });
     }
 
-    checkLoginInfo(val).then(({ data }) => {
+    handleLoginInfo(val).then(({ data }) => {
       // 0 ---- success
       // 1 ---- new username
       // 2 ---- wrong password
       if (data.status == 0) {
-        localStorage.setItem("token", data.token);
+        localStorage.setItem("token", data.id);
         setSelectedKey("/home/mycenter");
         navigate("/home/mycenter");
       } else if (data.status == 1) {
-        localStorage.setItem("token", data.token);
+        localStorage.setItem("token", data.id);
         setSelectedKey("/home/profile");
         navigate("/home/profile");
       } else if (data.status == 2) {
