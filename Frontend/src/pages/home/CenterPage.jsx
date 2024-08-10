@@ -10,7 +10,7 @@ import { getUserData } from "../../utils";
 const CenterPage = () => {
   const token = localStorage.getItem("token");
 
-  const [userData, setUserData] = useState({});
+  const [userData, setUserData] = useState();
 
   const getData = () => {
     getUserData({ userID: token }).then(({ data }) => {
@@ -22,7 +22,7 @@ const CenterPage = () => {
     getData();
   }, []);
 
-  if (!userData.id) {
+  if (!userData) {
     return <div>Loading...</div>;
   }
 

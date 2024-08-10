@@ -1,6 +1,7 @@
 import axios from "axios";
 
 export const baseURL = "http://127.0.0.1:7001";
+export const imageURL = `${baseURL}/images?imageName=`;
 
 class HttpRequest {
   constructor(baseURL) {

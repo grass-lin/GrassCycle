@@ -66,7 +66,6 @@ const App = () => {
 
   const getCycleData = () => {
     getHallData().then((response) => {
-      console.log(response.data);
       setData(response.data);
     });
   };

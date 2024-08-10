@@ -9,7 +9,7 @@ const MyEditableForm = () => {
   const [form] = Form.useForm();
   const [isEditable, setIsEditable] = useState(false);
   const [fileList, setFileList] = useState([]);
-  const [profile, setProfile] = useState({});
+  const [profile, setProfile] = useState();
   const usertoken = localStorage.getItem("token");
   const getData = () => {
     getUserData({ userID: usertoken }).then((res) => {
@@ -39,12 +39,12 @@ const MyEditableForm = () => {
 
     // 提交数据
     updateUserData(formData, { userID: usertoken })
-      .then((data) => {
+      .then(() => {
         message.success("提交成功！");
         setIsEditable(false);
         getData();
       })
-      .catch((error) => {
+      .catch(() => {
         message.error("提交失败！");
       });
   };
@@ -52,7 +52,7 @@ const MyEditableForm = () => {
   const handleUploadChange = ({ fileList: newFileList }) => {
     setFileList(newFileList);
   };
-  if (!profile.id) {
+  if (!profile) {
     return <div>Loading...</div>;
   }
   return (

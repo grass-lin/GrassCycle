@@ -6,12 +6,12 @@ import { collapseMenu, switchSelected } from "../../store/reducers/Menu";
 import "./CommonHeader.css";
 import { useNavigate } from "react-router-dom";
 import { getUserData } from "../../utils/index";
-import { baseURL } from "../../utils/axios";
+import { imageURL } from "../../utils/axios";
 
 const { Header } = Layout;
 
 const CommonHeader = ({ collapsed }) => {
-  const [userData, setUserData] = useState({});
+  const [userData, setUserData] = useState();
   const token = localStorage.getItem("token");
   const getData = () => {
     getUserData({ userID: token }).then(({ data }) => {
@@ -68,7 +68,7 @@ const CommonHeader = ({ collapsed }) => {
     },
   ];
 
-  if (!userData || !userData.profile) {
+  if (!userData) {
     return <div>Loading...</div>;
   }
 
@@ -92,10 +92,7 @@ const CommonHeader = ({ collapsed }) => {
       />
       <Dropdown menu={{ items }}>
         <a onClick={(e) => e.preventDefault()}>
-          <Avatar
-            size={36}
-            src={`${baseURL}/images?imageName=${userData.profile.avator}`}
-          />
+          <Avatar size={36} src={`${imageURL}${userData.profile.avator}`} />
         </a>
       </Dropdown>
     </Header>

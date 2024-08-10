@@ -1,9 +1,24 @@
 import { useParams, useNavigate } from "react-router-dom";
 import React, { useState, useEffect } from "react";
-import { LikeOutlined, LikeFilled, MessageOutlined } from "@ant-design/icons";
+import { switchSelected } from "../../store/reducers/Menu";
+import {
+  LikeOutlined,
+  LikeFilled,
+  MessageOutlined,
+  LeftOutlined,
+} from "@ant-design/icons";
 import { Avatar, List, Button, Space, Card } from "antd";
-import { getPosts, postUserJoin } from "../../utils/index";
+import {
+  getPosts,
+  postUserJoin,
+  getUserData,
+  postUserLike,
+  deleteUserLike,
+  deleteUserJoin,
+} from "../../utils/index";
 import "./HallPage.css";
+import { useDispatch } from "react-redux";
+import { imageURL } from "../../utils/axios";
 
 const IconText = ({ icon, text }) => (
   <Space>
@@ -14,98 +29,163 @@ const IconText = ({ icon, text }) => (
 
 const App = () => {
   const { cycleID } = useParams();
-  const [data, setData] = useState([]);
+
+  const [cycleData, setCycleData] = useState();
+  const [userData, setUserData] = useState();
+  const [loading, setLoading] = useState(true);
+
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+
   const token = localStorage.getItem("token");
 
-  const getPostsData = () => {
+  const setSelectedKey = (target) => {
+    dispatch(switchSelected(target));
+  };
+
+  const getData = () => {
     getPosts({ cycleID: cycleID }).then((response) => {
-      setData(response.data);
+      setCycleData(response.data);
+      setLoading(false);
+    });
+    getUserData({ userID: token }).then((response) => {
+      setUserData(response.data);
     });
   };
+
   useEffect(() => {
-    getPostsData();
+    getData();
   }, []);
 
   const handleClickPost = (item) => {
-    console.log(item);
     navigate(`${item.key}`);
   };
 
-  const handleLike = (item) => {
-    const newData = data.map((dataItem) => {
-      if (dataItem.key === item.key) {
-        return { ...dataItem, isLiked: !dataItem.isLiked };
-      }
-      return dataItem;
-    });
-    setData(newData);
+  const handleLike = (item, isLiked) => {
+    if (isLiked == false) {
+      postUserLike(
+        { userID: token },
+        { cycleID: cycleID, postKey: item.key }
+      ).then(() => {
+        getData();
+      });
+    } else {
+      deleteUserLike(
+        { userID: token },
+        { cycleID: cycleID, postKey: item.key }
+      ).then(() => {
+        getData();
+      });
+    }
   };
 
-  const postJoin = () => {
-    postUserJoin({ userID: token }, { cycleID: cycleID });
-    getPostsData();
+  const handleJoin = (type) => {
+    if (type) {
+      postUserJoin({ userID: token }, { cycleID: cycleID }).then(() => {
+        getData();
+      });
+    } else {
+      deleteUserJoin({ userID: token }, { cycleID: cycleID }).then(() => {
+        getData();
+      });
+    }
   };
 
-  const handleJoin = () => {
-    postJoin();
+  const handleGoBack = () => {
+    navigate("/hall");
+    setSelectedKey("/hall");
   };
-  return (
-    <div>
-      <Button type="primary" onClick={() => handleJoin()}>
-        加入圈子
-      </Button>
-      <List
-        itemLayout="vertical"
-        size="large"
-        pagination={{
-          pageSize: 4,
-        }}
-        dataSource={data}
-        footer={
-          <div>
-            <p>this is cycle {cycleID}</p>
-          </div>
-        }
-        renderItem={(item) => (
-          <div className="post" style={{ marginTop: "20px" }}>
-            <Card hoverable onClick={() => handleClickPost(item)}>
-              <List.Item
-                key={item.title}
-                dependencies={data}
-                extra={
-                  cycleID == 1 ? (
-                    <img
-                      width={272}
-                      src="https://gw.alipayobjects.com/zos/rmsportal/mqaQswcyDLcXyDKnZfES.png"
-                    />
-                  ) : null
-                }
-              >
-                <List.Item.Meta
-                  avatar={<Avatar src={item.avatar} />}
-                  title={item.title}
-                  description={item.description}
-                />
-                {item.content}
-              </List.Item>
-            </Card>
-            <div className="downside">
-              <Button
-                icon={item.isLiked ? <LikeFilled /> : <LikeOutlined />}
-                type={item.isLiked ? "primary" : "default"}
-                onClick={() => {
-                  handleLike(item);
-                }}
-              >
-                喜欢
+
+  if (loading || !userData) {
+    return <div>Loading...</div>;
+  } else
+    return (
+      <div>
+        <div className="cycle-header">
+          <Button
+            type="primary"
+            icon={<LeftOutlined />}
+            onClick={() => {
+              handleGoBack();
+            }}
+          >
+            返回上一级
+          </Button>
+          <span className="new-cancel">
+            {userData.join.includes(`${cycleID}`) ? (
+              <Button onClick={() => handleJoin(false)}>取消关注</Button>
+            ) : (
+              <Button type="primary" onClick={() => handleJoin(true)}>
+                关注圈子
               </Button>
-              <IconText icon={MessageOutlined} text={item.comments} />
+            )}
+            <Button
+              type="primary"
+              onClick={() => {
+                navigate("new");
+              }}
+            >
+              发布帖子
+            </Button>
+          </span>
+        </div>
+        <List
+          itemLayout="vertical"
+          size="large"
+          pagination={{
+            pageSize: 4,
+          }}
+          dataSource={cycleData}
+          footer={
+            <div>
+              <p>this is cycle {cycleID}</p>
             </div>
-          </div>
-        )}
-      />
-    </div>
-  );
+          }
+          renderItem={(item) => {
+            const isLiked = item.likeList.includes(token);
+            return (
+              <div className="post" style={{ marginTop: "20px" }}>
+                <Card hoverable onClick={() => handleClickPost(item)}>
+                  <List.Item
+                    key={item.key}
+                    dependencies={cycleData}
+                    extra={
+                      item.photos.length ? (
+                        <img width={272} src={`${imageURL}${item.photos[0]}`} />
+                      ) : null
+                    }
+                  >
+                    <List.Item.Meta
+                      avatar={
+                        <Avatar src={`${imageURL}${item.author.avator}`} />
+                      }
+                      title={item.author.name}
+                      description={item.author.intro}
+                    />
+                    <div>
+                      <h3>{item.title}</h3>
+                      {item.content}
+                    </div>
+                  </List.Item>
+                </Card>
+                <div className="downside">
+                  <Button
+                    icon={isLiked ? <LikeFilled /> : <LikeOutlined />}
+                    type={isLiked ? "primary" : "default"}
+                    onClick={() => {
+                      handleLike(item, isLiked);
+                    }}
+                  >
+                    喜欢
+                  </Button>
+                  <IconText icon={LikeOutlined} text={item.likes} />
+                  <IconText icon={MessageOutlined} text={item.comments} />
+                </div>
+              </div>
+            );
+          }}
+        />
+      </div>
+    );
 };
 export default App;

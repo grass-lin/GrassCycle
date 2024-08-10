@@ -3,6 +3,7 @@ import MainPage from "../pages/main";
 import HallPage from "../pages/hall/HallPage";
 import CyclePage from "../pages/hall/CyclePage";
 import PostPage from "../pages/hall/PostPage";
+import NewPostPage from "../pages/hall/NewPostPage";
 import MsgPage from "../pages/message/MsgPage";
 import LoginPage from "../pages/login/LoginPage";
 import LikePage from "../pages/home/LikePage";
@@ -50,6 +51,10 @@ const router = createBrowserRouter([
       {
         path: "hall/cycle/:cycleID/:postID",
         Component: PostPage,
+      },
+      {
+        path: "hall/cycle/:cycleID/new",
+        Component: NewPostPage,
       },
     ],
   },

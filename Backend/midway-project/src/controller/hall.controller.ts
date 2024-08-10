@@ -1,31 +1,31 @@
 import {
   Inject,
   Controller,
-  Get,
   Query,
   Post,
   Body,
   ALL,
+  Del,
 } from '@midwayjs/core';
 import { Context } from '@midwayjs/koa';
-import { CycleService } from '../service/CycleService';
+import { HallService } from '../service/HallService';
 
 @Controller('/hall')
-export class APIController {
+export class HallController {
   @Inject()
   ctx: Context;
 
   @Inject()
-  cycleService: CycleService;
-
-  @Get('/cycle')
-  async getPost(@Query('cycleID') cycleID: number) {
-    const postData = await this.cycleService.getPosts(cycleID);
-    return postData;
-  }
+  hallService: HallService;
 
   @Post('/join')
-  async postUserJoin(@Query('cycleID') cycleID, @Body(ALL) body: any) {
+  async postUserJoin(@Query('cycleID') cycleKey, @Body(ALL) body: any) {
     const { userID } = body;
+    this.hallService.handleJoin(true, cycleKey, userID);
+  }
+  @Del('/join')
+  async deleteUserJoin(@Query('cycleID') cycleKey, @Body(ALL) body: any) {
+    const { userID } = body;
+    this.hallService.handleJoin(false, cycleKey, userID);
   }
 }

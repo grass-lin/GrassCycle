@@ -12,3 +12,24 @@
 .post .title {
   font-size: 16px;
 }
+
+.cycle-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px;
+}
+
+.photo-des {
+  text-align: center;
+}
+
+.submit-button {
+  text-align: center;
+}
+
+.new-cancel {
+  display: flex;
+  flex-direction: row;
+  gap: 20px;
+}

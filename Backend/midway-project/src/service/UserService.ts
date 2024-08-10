@@ -10,6 +10,10 @@ export class UserService {
     const userData = await fs.promises.readFile(this.dataPath, 'utf-8');
     let items = JSON.parse(userData);
     const index = items.findIndex(item => item.id == id);
+
+    if (data.avator == 'false') {
+      data.avator = items[index].profile.avator;
+    }
     items[index].profile.name = data.name;
     items[index].profile.intro = data.intro;
     items[index].profile.avator = data.avator;
