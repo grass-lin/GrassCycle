@@ -20,3 +20,9 @@
   flex-direction: row;
   gap: 5px;
 }
+
+.focus-container {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}

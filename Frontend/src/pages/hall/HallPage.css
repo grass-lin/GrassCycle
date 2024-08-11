@@ -33,3 +33,24 @@
   flex-direction: row;
   gap: 20px;
 }
+
+.img-container {
+  padding: 3px;
+}
+
+.post-header {
+  display: flex;
+  flex-direction: row;
+  gap: 20px;
+}
+.post-header .avatar {
+  display: flex;
+  align-items: center;
+}
+
+.hall-header {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  padding: 10px;
+}

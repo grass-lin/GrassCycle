@@ -26,9 +26,27 @@ export class CycleController {
   imageService: ImageService;
 
   @Get('/')
-  async getPost(@Query('cycleID') cycleKey: number) {
-    const postData = await this.cycleService.getPosts(cycleKey);
+  async getCycle(@Query('cycleID') cycleKey: number) {
+    const cycleData = await this.cycleService.getCycle(cycleKey);
+    return cycleData;
+  }
+
+  @Get('/post')
+  async getPost(
+    @Query('cycleID') cycleKey: number,
+    @Query('postID') postKey: number
+  ) {
+    const postData = await this.cycleService.getPost(cycleKey, postKey);
     return postData;
+  }
+
+  @Post('/post')
+  async postComment(
+    @Query('cycleID') cycleKey: number,
+    @Query('postID') postKey: number,
+    @Fields(ALL) formData: any
+  ) {
+    this.cycleService.postComment(cycleKey, postKey, formData);
   }
 
   @Post('/')

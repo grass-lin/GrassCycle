@@ -29,15 +29,15 @@ export class APIController {
   ) {
     const upload = await this.imageService.uploadImage(files);
 
-    let avatorName: string;
+    let avatarName: string;
     if (upload.length) {
-      avatorName = upload[0];
+      avatarName = upload[0];
     } else {
-      avatorName = 'false';
+      avatarName = 'false';
     }
     this.userService.updateUserData(userID, {
       ...formData,
-      avator: avatorName,
+      avatar: avatarName,
     });
   }
 }

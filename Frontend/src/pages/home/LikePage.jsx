@@ -1,6 +1,6 @@
 import React from "react";
-import Comments from "./units/cards/Comments";
-import Likes from "./units/cards/Likes";
+import Comments from "./units/Comments";
+import Likes from "./units/Likes";
 import { Row, Col } from "antd";
 
 const LikePage = () => {

@@ -14,7 +14,25 @@ export class HallService {
     return items;
   }
 
+  async postNewCycle(body: any): Promise<number> {
+    const cycleData = await fs.promises.readFile(this.cyclePath, 'utf-8');
+    const cycleItems = JSON.parse(cycleData);
+    const newKey = cycleItems.length + 1;
+    const newCycle = {
+      key: newKey,
+      name: body.name,
+      size: 0,
+      description: body.description,
+      member: [],
+    };
+    cycleItems.push(newCycle);
+
+    await fs.promises.writeFile(this.cyclePath, JSON.stringify(cycleItems));
+    return newKey;
+  }
   async handleJoin(type: boolean, cycleKey: number, userID: number) {
+    cycleKey = Number(cycleKey);
+    userID = Number(userID);
     const cycleData = await fs.promises.readFile(this.cyclePath, 'utf-8');
     const userData = await fs.promises.readFile(this.userPath, 'utf-8');
     const cycleItems = JSON.parse(cycleData);
@@ -24,13 +42,18 @@ export class HallService {
     const userIndex = userItems.findIndex(item => item.id == userID);
 
     if (type) {
-      cycleItems[cycleIndex].funs.push(userID);
-      userItems[userIndex].join.push(cycleKey);
+      cycleItems[cycleIndex].member.push(userID);
+      userItems[userIndex].join.push({
+        cycleKey: cycleKey,
+        name: cycleItems[cycleIndex].name,
+      });
       cycleItems[cycleIndex].size += 1;
     } else {
-      const funsListIndex = cycleItems[cycleIndex].funs.indexOf(userID);
-      const joinListIndex = userItems[userIndex].join.indexOf(cycleKey);
-      cycleItems[cycleIndex].funs.splice(funsListIndex, 1);
+      const memberListIndex = cycleItems[cycleIndex].member.indexOf(userID);
+      const joinListIndex = userItems[userIndex].join.findIndex(
+        item => item.cycleKey == cycleKey
+      );
+      cycleItems[cycleIndex].member.splice(memberListIndex, 1);
       userItems[userIndex].join.splice(joinListIndex, 1);
       cycleItems[cycleIndex].size -= 1;
     }

@@ -30,9 +30,23 @@ const MyEditableForm = () => {
 
   const handleFinish = (values) => {
     const formData = new FormData();
+    let flag = false;
     Object.keys(values).forEach((key) => {
-      formData.append(key, values[key]);
+      if (values[key] != "") {
+        formData.append(key, values[key]);
+      } else {
+        if (key == "name") {
+          message.error("昵称不能为空");
+        }
+        if (key == "intro") {
+          message.error("简介不能为空");
+        }
+        flag = true;
+      }
     });
+    if (flag) {
+      return;
+    }
     fileList.forEach((file) => {
       formData.append("images", file.originFileObj);
     });
@@ -70,7 +84,15 @@ const MyEditableForm = () => {
         style={{ maxWidth: 600 }}
       >
         <Form.Item label="昵称" name="name">
-          <Input disabled={!isEditable} />
+          <Input
+            disabled={!isEditable}
+            rules={[
+              {
+                required: true,
+                message: "昵称不能为空",
+              },
+            ]}
+          />
         </Form.Item>
 
         <Form.Item label="个人简介" name="intro">
@@ -79,6 +101,12 @@ const MyEditableForm = () => {
             showCount
             maxLength={50}
             style={{ height: 100, resize: "none" }}
+            rules={[
+              {
+                required: true,
+                message: "简介不能为空",
+              },
+            ]}
           />
         </Form.Item>
 

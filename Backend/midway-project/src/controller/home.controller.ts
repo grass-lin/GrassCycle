@@ -29,11 +29,6 @@ export class HomeController {
     const val = await this.userService.getUserData(userID);
     return val;
   }
-  @Get('/hall')
-  async hall(): Promise<Object> {
-    const hallData = await this.hallService.getHallData();
-    return hallData;
-  }
 
   @Post('/login')
   async login(@Body(ALL) body: any): Promise<Object> {

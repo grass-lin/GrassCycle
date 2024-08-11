@@ -4,9 +4,10 @@ import HallPage from "../pages/hall/HallPage";
 import CyclePage from "../pages/hall/CyclePage";
 import PostPage from "../pages/hall/PostPage";
 import NewPostPage from "../pages/hall/NewPostPage";
-import MsgPage from "../pages/message/MsgPage";
+import MemberPage from "../pages/hall/MemberPage";
+//import MsgPage from "../pages/message/MsgPage";
 import LoginPage from "../pages/login/LoginPage";
-import LikePage from "../pages/home/LikePage";
+//import LikePage from "../pages/home/LikePage";
 import ProfilePage from "../pages/home/ProfilePage";
 import CenterPage from "../pages/home/CenterPage";
 
@@ -22,10 +23,10 @@ const router = createBrowserRouter([
       {
         path: "home",
         children: [
-          {
-            path: "likes",
-            Component: LikePage,
-          },
+          //{
+          //  path: "likes",
+          //  Component: LikePage,
+          //},
           {
             path: "profile",
             Component: ProfilePage,
@@ -40,10 +41,10 @@ const router = createBrowserRouter([
         path: "hall",
         Component: HallPage,
       },
-      {
-        path: "message",
-        Component: MsgPage,
-      },
+      //      {
+      //        path: "message",
+      //        Component: MsgPage,
+      //      },
       {
         path: "hall/cycle/:cycleID",
         Component: CyclePage,
@@ -55,6 +56,10 @@ const router = createBrowserRouter([
       {
         path: "hall/cycle/:cycleID/new",
         Component: NewPostPage,
+      },
+      {
+        path: "hall/cycle/:cycleID/member",
+        Component: MemberPage,
       },
     ],
   },

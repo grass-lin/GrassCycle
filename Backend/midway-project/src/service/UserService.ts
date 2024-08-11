@@ -7,20 +7,22 @@ export class UserService {
   private dataPath = path.resolve(__dirname, '../data/Users.json');
 
   async updateUserData(id: number, data: any) {
+    id = Number(id);
     const userData = await fs.promises.readFile(this.dataPath, 'utf-8');
     let items = JSON.parse(userData);
     const index = items.findIndex(item => item.id == id);
 
-    if (data.avator == 'false') {
-      data.avator = items[index].profile.avator;
+    if (data.avatar == 'false') {
+      data.avatar = items[index].profile.avatar;
     }
     items[index].profile.name = data.name;
     items[index].profile.intro = data.intro;
-    items[index].profile.avator = data.avator;
+    items[index].profile.avatar = data.avatar;
     await fs.promises.writeFile(this.dataPath, JSON.stringify(items));
   }
 
   async getUserData(id: number) {
+    id = Number(id);
     const userData = await fs.promises.readFile(this.dataPath, 'utf-8');
     const items = JSON.parse(userData);
     const index = items.findIndex(item => item.id == id);

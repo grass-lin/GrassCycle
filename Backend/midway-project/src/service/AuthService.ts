@@ -24,8 +24,11 @@ export class AuthService {
         profile: {
           name: `圈子用户${length}`,
           intro: '这个人很懒, 什么都没有写',
-          avator: '1.png',
+          avatar: '1.png',
         },
+        likeNum: 0,
+        postNum: 0,
+        commentNum: 0,
         like: [],
         join: [],
         post: [],

@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
-import Profile from "./units/cards/Profile";
-import CountPane from "./units/cards/CountPane";
-import Focus from "./units/cards/Focus";
-import Posts from "./units/cards/Posts";
+import Profile from "./units/Profile";
+import CountPane from "./units/CountPane";
+import Focus from "./units/Focus";
+import Posts from "./units/Posts";
 import "./HomePage.css";
 import { Row, Col } from "antd";
 import { getUserData } from "../../utils";
@@ -26,18 +26,19 @@ const CenterPage = () => {
     return <div>Loading...</div>;
   }
 
-  const likeNum = userData.like.length;
-  const commentNum = userData.post.length;
-
   return (
     <Row gutter={[24]}>
       <Col span={10}>
         <Profile name={userData.profile.name} intro={userData.profile.intro} />
-        <CountPane likeNum={likeNum} commentNum={commentNum} />
+        <Focus {...userData} />
       </Col>
       <Col span={14}>
-        <Focus />
-        <Posts />
+        <CountPane
+          likeNum={userData.likeNum}
+          commentNum={userData.commentNum}
+          postNum={userData.postNum}
+        />
+        <Posts {...userData} />
       </Col>
     </Row>
   );

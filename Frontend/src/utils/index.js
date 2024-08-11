@@ -1,12 +1,29 @@
 import axios from "./axios";
 
-export function getPosts(params) {
+export function getCycle(params) {
   return axios.request({
     url: "cycle",
     method: "get",
     params,
   });
 }
+
+export const getPost = (params) => {
+  return axios.request({
+    url: "cycle/post",
+    method: "get",
+    params,
+  });
+};
+
+export const postComment = (val, params) => {
+  return axios.request({
+    url: "cycle/post",
+    method: "post",
+    data: val,
+    params,
+  });
+};
 
 export const postNewPost = (val, params) => {
   return axios.request({
@@ -21,6 +38,14 @@ export const getHallData = () => {
   return axios.request({
     url: "hall",
     method: "get",
+  });
+};
+
+export const postNewCycle = (val) => {
+  return axios.request({
+    url: "hall",
+    method: "post",
+    data: val,
   });
 };
 

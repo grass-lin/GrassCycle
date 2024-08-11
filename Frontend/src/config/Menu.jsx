@@ -12,10 +12,10 @@ export default [
         key: "/home/mycenter",
         label: "我的空间",
       },
-      {
-        key: "/home/likes",
-        label: "点赞和评论",
-      },
+      //{
+      //  key: "/home/likes",
+      //  label: "点赞和评论",
+      //},
     ],
   },
   {
@@ -23,9 +23,9 @@ export default [
     icon: "VideoCameraOutlined",
     label: "圈子大厅",
   },
-  {
-    key: "/message",
-    icon: "UploadOutlined",
-    label: "消息",
-  },
+  //{
+  //  key: "/message",
+  //  icon: "UploadOutlined",
+  //  label: "消息",
+  //},
 ];

@@ -26,7 +26,6 @@ const NewPostPage = () => {
       formData.append("images", file.originFileObj);
     });
 
-    console.log(formData.entries());
     postNewPost(formData, { cycleID: cycleID })
       .then(() => {
         message.success("提交成功！");
@@ -55,10 +54,18 @@ const NewPostPage = () => {
         >
           返回上一级
         </Button>
-        <span>here is cycle 1</span>
       </div>
       <Form layout="horizontal" onFinish={handleFinish}>
-        <Form.Item label="标题" name="title">
+        <Form.Item
+          label="标题"
+          name="title"
+          rules={[
+            {
+              required: true,
+              message: "请添加标题",
+            },
+          ]}
+        >
           <Input.TextArea
             showCount
             maxLength={40}
@@ -67,7 +74,16 @@ const NewPostPage = () => {
           />
         </Form.Item>
 
-        <Form.Item label="内容" name="content">
+        <Form.Item
+          label="内容"
+          name="content"
+          rules={[
+            {
+              required: true,
+              message: "请添加内容",
+            },
+          ]}
+        >
           <Input.TextArea
             showCount
             maxLength={400}

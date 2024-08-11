@@ -92,7 +92,7 @@ const CommonHeader = ({ collapsed }) => {
       />
       <Dropdown menu={{ items }}>
         <a onClick={(e) => e.preventDefault()}>
-          <Avatar size={36} src={`${imageURL}${userData.profile.avator}`} />
+          <Avatar size={36} src={`${imageURL}${userData.profile.avatar}`} />
         </a>
       </Dropdown>
     </Header>
