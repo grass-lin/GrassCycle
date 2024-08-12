@@ -5,8 +5,8 @@ import * as path from 'path';
 @Provide()
 export class CycleService {
   private data: Array<any>;
-  private userPath = path.resolve(__dirname, '../data/Users.json');
-  private postPath = path.resolve(__dirname, '../data/Posts');
+  private userPath = path.resolve(process.cwd(), '../data/Users.json');
+  private postPath = path.resolve(process.cwd(), '../data/Posts');
 
   constructor() {
     this.readFile();

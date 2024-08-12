@@ -5,7 +5,7 @@ import * as send from 'koa-send';
 
 @Controller('/images')
 export class ImageController {
-  private imagePath = path.resolve(__dirname, '../../uploads');
+  private imagePath = path.resolve(process.cwd(), '../../uploads');
   @Inject()
   ctx: ParameterizedContext;
   @Get('')

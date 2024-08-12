@@ -35,10 +35,9 @@ const LoginPage = () => {
         message.success("登录成功!!");
         setTimeout(() => {
           setSelectedKey("/home/profile");
-          navigate("/home/profile");
+          navigate("/home/mycenter");
         }, 2000);
         setSelectedKey("/home/mycenter");
-        navigate("/home/mycenter");
       } else if (data.status == 1) {
         localStorage.setItem("token", data.id);
         message.success("新用户注册成功!!");

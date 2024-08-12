@@ -29,6 +29,10 @@ export class HomeController {
     const val = await this.userService.getUserData(userID);
     return val;
   }
+  @Get('')
+  async hello() {
+    return 'hello world';
+  }
 
   @Post('/login')
   async login(@Body(ALL) body: any): Promise<Object> {

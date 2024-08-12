@@ -4,7 +4,7 @@ import * as path from 'path';
 
 @Provide()
 export class AuthService {
-  private dataPath = path.resolve(__dirname, '../data/Users.json');
+  private dataPath = path.resolve(process.cwd(), '../data/Users.json');
 
   async checkLoginInfo(username: string, password: string) {
     const data = await fs.promises.readFile(this.dataPath, 'utf-8');

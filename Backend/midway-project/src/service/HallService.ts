@@ -5,8 +5,8 @@ import * as path from 'path';
 
 @Provide()
 export class HallService {
-  private cyclePath = path.resolve(__dirname, '../data/Cycles.json');
-  private userPath = path.resolve(__dirname, '../data/Users.json');
+  private cyclePath = path.resolve(process.cwd(), '../data/Cycles.json');
+  private userPath = path.resolve(process.cwd(), '../data/Users.json');
 
   async getHallData() {
     const data = await fs.promises.readFile(this.cyclePath, 'utf-8');

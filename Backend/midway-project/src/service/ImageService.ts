@@ -4,8 +4,8 @@ import * as path from 'path';
 
 @Provide()
 export class ImageService {
-  private imagePath = path.resolve(__dirname, '../../uploads');
-  private countFilePath = path.resolve(__dirname, '../data/Images.json');
+  private imagePath = path.resolve(process.cwd(), '../../uploads');
+  private countFilePath = path.resolve(process.cwd(), '../data/Images.json');
   private imageCount: number = -1;
 
   async uploadImage(files: any[]): Promise<Array<string>> {

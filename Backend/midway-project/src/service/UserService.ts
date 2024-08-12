@@ -4,7 +4,7 @@ import * as fs from 'fs';
 
 @Provide()
 export class UserService {
-  private dataPath = path.resolve(__dirname, '../data/Users.json');
+  private dataPath = path.join(process.cwd(), '../data/Users.json');
 
   async updateUserData(id: number, data: any) {
     id = Number(id);

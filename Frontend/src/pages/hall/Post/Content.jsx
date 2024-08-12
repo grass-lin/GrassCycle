@@ -27,7 +27,12 @@ export const ProfileCard = (props) => {
 
 const App = (props) => {
   const imgList = props.photos.map((item) => (
-    <img className="img-container" width={243} src={`${imageURL}${item}`} />
+    <img
+      key={item}
+      className="img-container"
+      width={243}
+      src={`${imageURL}${item}`}
+    />
   ));
 
   return (

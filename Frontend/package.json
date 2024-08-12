@@ -1,18 +1,30 @@
 {
-  "name": "ls",
+  "name": "GrassCycle",
   "private": true,
   "version": "0.0.0",
   "type": "module",
+  "main": "index.cjs",
+  "bin": "index.cjs",
+  "pkg": {
+    "assets": [
+      "dist/**/*",
+      "index.cjs"
+    ]
+  },
   "scripts": {
     "dev": "vite",
+    "start": "node server.js",
     "build": "vite build",
     "lint": "eslint . --ext js,jsx --report-unused-disable-directives --max-warnings 0",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "pkg": " pkg . -t node18-linux-x64 --out-path ./output/linux-x64"
   },
   "dependencies": {
     "@reduxjs/toolkit": "^2.2.7",
     "antd": "^5.19.4",
     "axios": "^1.7.3",
+    "express": "^4.19.2",
+    "ncc": "^0.3.6",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-redux": "^9.1.2",
