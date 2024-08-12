@@ -23,7 +23,7 @@ export class AuthService {
         password: `${password}`,
         profile: {
           name: `圈子用户${length}`,
-          intro: '这个人很懒, 什么都没有写',
+          intro: '这个人没有写简介',
           avatar: '1.png',
         },
         likeNum: 0,

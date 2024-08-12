@@ -1,9 +1,10 @@
 import React from "react";
-import { Card, Row, Col, Avatar } from "antd";
+import { Card, Avatar } from "antd";
 import { imageURL } from "../../../utils/axios";
 import "../HallPage.css";
 
 export const ProfileCard = (props) => {
+  console.log(props);
   const headerContainer = {
     body: {
       padding: 0,
@@ -17,7 +18,7 @@ export const ProfileCard = (props) => {
         </div>
         <div>
           <h4>{props.name}</h4>
-          <div>{props.intro}</div>
+          <div style={{ marginBottom: "10px" }}>{props.intro}</div>
         </div>
       </div>
     </Card>

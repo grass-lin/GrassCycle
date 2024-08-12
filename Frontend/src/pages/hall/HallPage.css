@@ -54,3 +54,10 @@
   align-items: center;
   padding: 10px;
 }
+
+.member-container {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  padding: 10px;
+}

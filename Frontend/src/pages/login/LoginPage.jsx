@@ -32,12 +32,20 @@ const LoginPage = () => {
       // 2 ---- wrong password
       if (data.status == 0) {
         localStorage.setItem("token", data.id);
+        message.success("登录成功!!");
+        setTimeout(() => {
+          setSelectedKey("/home/profile");
+          navigate("/home/profile");
+        }, 2000);
         setSelectedKey("/home/mycenter");
         navigate("/home/mycenter");
       } else if (data.status == 1) {
         localStorage.setItem("token", data.id);
-        setSelectedKey("/home/profile");
-        navigate("/home/profile");
+        message.success("新用户注册成功!!");
+        setTimeout(() => {
+          setSelectedKey("/home/profile");
+          navigate("/home/profile");
+        }, 2000);
       } else if (data.status == 2) {
         return message.open({
           type: "error",
@@ -53,11 +61,11 @@ const LoginPage = () => {
         <Input placeholder="请输入账号" />
       </Form.Item>
       <Form.Item label="密码" name="password">
-        <Input.Password placeholder="请输入账号" />
+        <Input.Password placeholder="请输入密码" />
       </Form.Item>
       <Form.Item className="login-button">
         <Button type="primary" htmlType="submit">
-          登录
+          登录或注册
         </Button>
       </Form.Item>
     </Form>

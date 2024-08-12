@@ -4,7 +4,7 @@ import "../HomePage.css";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { switchSelected } from "../../../store/reducers/Menu";
-import { LikeFilled, CommentOutlined } from "@ant-design/icons";
+import { LikeFilled, CommentOutlined, BookOutlined } from "@ant-design/icons";
 
 const IconText = ({ text1, icon, text2 }) => {
   return (
@@ -16,28 +16,16 @@ const IconText = ({ text1, icon, text2 }) => {
   );
 };
 const CountPane = (props) => {
-  const navigate = useNavigate();
-  const dispatch = useDispatch();
-  const setSelectedKey = (target) => {
-    dispatch(switchSelected(target));
-  };
   return (
-    <Card
-      bordered={true}
-      hoverable
-      onClick={() => {
-        navigate("/home/likes");
-        setSelectedKey("/home/likes");
-      }}
-    >
+    <Card bordered={true}>
       <div className="countpane-card">
         <IconText text1="点赞数" icon={LikeFilled} text2={props.likeNum} />
+        <IconText text1="发帖数" icon={BookOutlined} text2={props.postNum} />
         <IconText
-          text1="回复数"
+          text1="评论数"
           icon={CommentOutlined}
           text2={props.commentNum}
         />
-        <IconText text1="发帖数" icon={CommentOutlined} text2={props.postNum} />
       </div>
     </Card>
   );

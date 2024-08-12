@@ -28,10 +28,10 @@ const NewPostPage = () => {
 
     postNewPost(formData, { cycleID: cycleID })
       .then(() => {
-        message.success("提交成功！");
+        message.success("提交成功! ");
         setTimeout(() => {
           navigate(-1);
-        }, 3000);
+        }, 2000);
       })
       .catch(() => {
         message.error("提交失败！");

@@ -1,25 +1,18 @@
 import { useParams, useNavigate } from "react-router-dom";
 import React, { useState, useEffect } from "react";
 import {
-  LikeOutlined,
   LikeFilled,
-  MessageOutlined,
+  CommentOutlined,
+  BookOutlined,
   LeftOutlined,
 } from "@ant-design/icons";
-import { Avatar, List, Button, Space, Card } from "antd";
-import {
-  getCycle,
-  postUserJoin,
-  getUserData,
-  postUserLike,
-  deleteUserLike,
-  deleteUserJoin,
-} from "../../utils/index";
+import { List, Button, Space, Card, Row, Col } from "antd";
+import { getHallData, getUserData } from "../../utils/index";
 import "./HallPage.css";
-import { imageURL } from "../../utils/axios";
+import { ProfileCard } from "./Post/Content";
 
 const IconText = ({ icon, text }) => (
-  <Space>
+  <Space style={{ marginRight: "40px" }}>
     {React.createElement(icon)}
     {text}
   </Space>
@@ -28,26 +21,52 @@ const IconText = ({ icon, text }) => (
 const App = () => {
   const { cycleID } = useParams();
 
-  const [cycleData, setCycleData] = useState();
-  const [userData, setUserData] = useState();
-  const [loading, setLoading] = useState(true);
+  const [memberData, setMemberData] = useState();
 
   const navigate = useNavigate();
-  //const dispatch = useDispatch();
-
-  const token = localStorage.getItem("token");
-
-  //const setSelectedKey = (target) => {
-  //  dispatch(switchSelected(target));
-  //};
 
   const getData = () => {
-    getCycle({ cycleID: cycleID }).then((response) => {
-      setCycleData(response.data);
-      setLoading(false);
-    });
-    getUserData({ userID: token }).then((response) => {
-      setUserData(response.data);
+    getHallData().then(({ data }) => {
+      const index = data.findIndex((item) => item.key == cycleID);
+      const memberList = data[index].member;
+      if (Array.isArray(memberList)) {
+        Promise.all(
+          memberList.map((item) => {
+            return getUserData({ userID: item }).then(({ data }) => {
+              let likeNum = 0;
+              let postNum = 0;
+              let commentNum = 0;
+              let temp = data.like.find((item) => item.cycle == cycleID);
+              if (temp) {
+                likeNum = temp.post.length;
+              }
+
+              temp = data.post.find((item) => item.cycleKey == cycleID);
+              if (temp) {
+                postNum = temp.post.length;
+              }
+
+              temp = data.comment.find((item) => item.cycleKey == cycleID);
+              if (temp) {
+                commentNum = temp.post.reduce((count, post) => {
+                  return count + post.comment.length;
+                }, 0);
+              }
+              return {
+                key: data.id,
+                name: data.profile.name,
+                intro: data.profile.intro,
+                avatar: data.profile.avatar,
+                likeNum: likeNum,
+                postNum: postNum,
+                commentNum: commentNum,
+              };
+            });
+          })
+        ).then((members) => {
+          setMemberData(members);
+        });
+      }
     });
   };
 
@@ -55,51 +74,8 @@ const App = () => {
     getData();
   }, []);
 
-  const handleClickPost = (item) => {
-    navigate(`${item.key}`);
-  };
+  if (!memberData) return <div>Loading...</div>;
 
-  const handleLike = (item, isLiked) => {
-    if (isLiked == false) {
-      postUserLike(
-        { userID: token },
-        { cycleID: cycleID, postKey: item.key }
-      ).then(() => {
-        getData();
-      });
-    } else {
-      deleteUserLike(
-        { userID: token },
-        { cycleID: cycleID, postKey: item.key }
-      ).then(() => {
-        getData();
-      });
-    }
-  };
-
-  const handleJoin = (type) => {
-    if (type) {
-      postUserJoin({ userID: token }, { cycleID: cycleID }).then(() => {
-        getData();
-      });
-    } else {
-      deleteUserJoin({ userID: token }, { cycleID: cycleID }).then(() => {
-        getData();
-      });
-    }
-  };
-
-  const handleGoBack = () => {
-    navigate(-1);
-  };
-
-  const inCycle = () => {
-    if (userData.join.findIndex((item) => item.cycleKey == cycleID) == -1)
-      return false;
-    else return true;
-  };
-
-  if (loading || !userData) return <div>Loading...</div>;
   return (
     <div>
       <div className="cycle-header">
@@ -107,86 +83,52 @@ const App = () => {
           type="primary"
           icon={<LeftOutlined />}
           onClick={() => {
-            handleGoBack();
+            navigate(-1);
           }}
         >
           返回上一级
         </Button>
-        <span className="new-cancel">
-          {inCycle() ? (
-            <Button onClick={() => handleJoin(false)}>取消关注</Button>
-          ) : (
-            <Button type="primary" onClick={() => handleJoin(true)}>
-              关注圈子
-            </Button>
-          )}
-          <Button
-            type="primary"
-            onClick={() => {
-              navigate("new");
-            }}
-          >
-            发布帖子
-          </Button>
-          <Button
-            type="primary"
-            onClick={() => {
-              navigate("member");
-            }}
-          >
-            查看圈子成员
-          </Button>
-        </span>
       </div>
-      <List
-        itemLayout="vertical"
-        size="large"
-        pagination={{
-          pageSize: 4,
-        }}
-        dataSource={cycleData}
-        renderItem={(item) => {
-          const isLiked = item.likeList.includes(Number(token));
-          return (
-            <div className="post" style={{ marginTop: "20px" }}>
-              <Card hoverable onClick={() => handleClickPost(item)}>
-                <List.Item
-                  key={item.key}
-                  dependencies={cycleData}
-                  extra={
-                    item.photos.length ? (
-                      <img width={272} src={`${imageURL}${item.photos[0]}`} />
-                    ) : null
-                  }
-                >
-                  <List.Item.Meta
-                    avatar={<Avatar src={`${imageURL}${item.author.avatar}`} />}
-                    title={item.author.name}
-                    description={item.author.intro}
-                  />
-                  <div>
-                    <h3>{item.title}</h3>
-                    {item.content}
-                  </div>
+      <Row justify="center">
+        <Col span={16}>
+          <h2>圈子成员</h2>
+          <List
+            itemLayout="vertical"
+            size="small"
+            pagination={{
+              pageSize: 4,
+            }}
+            dataSource={memberData}
+            renderItem={(item) => (
+              <div className="post" style={{ marginTop: "20px" }}>
+                <List.Item key={item.key}>
+                  <Card>
+                    <ProfileCard
+                      name={item.name}
+                      intro={item.intro}
+                      avatar={item.avatar}
+                    />
+                    <span className="member-container">
+                      <IconText
+                        icon={LikeFilled}
+                        text={`圈内点赞数${item.likeNum}`}
+                      ></IconText>
+                      <IconText
+                        icon={BookOutlined}
+                        text={`圈内发帖数${item.postNum}`}
+                      ></IconText>
+                      <IconText
+                        icon={CommentOutlined}
+                        text={`圈内评论数${item.commentNum}`}
+                      ></IconText>
+                    </span>
+                  </Card>
                 </List.Item>
-              </Card>
-              <div className="downside">
-                <Button
-                  icon={isLiked ? <LikeFilled /> : <LikeOutlined />}
-                  type={isLiked ? "primary" : "default"}
-                  onClick={() => {
-                    handleLike(item, isLiked);
-                  }}
-                >
-                  喜欢
-                </Button>
-                <IconText icon={LikeOutlined} text={item.likes} />
-                <IconText icon={MessageOutlined} text={item.comments} />
               </div>
-            </div>
-          );
-        }}
-      />
+            )}
+          />
+        </Col>
+      </Row>
     </div>
   );
 };
