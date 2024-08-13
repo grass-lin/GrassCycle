@@ -27,10 +27,12 @@
 
 部署源码请clone本代码
 请确保环境中安装有node环境 (建议node20或更新)
+
 后端: 
 - 源代码保存在Backend/midway-project/src中
 - 先执行```cd Backend/midway-project; npm install```借助npm安装项目依赖包
 - ```npm run dev```即可运行后端代码并在http://127.0.0.1:7001启动后端
+
 前端:
 - 源代码保存在Fontend/src中
 - 先执行```cd Fontend; npm install```借助npm安装项目依赖包
